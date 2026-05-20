@@ -11,7 +11,6 @@ CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# load env vars manually
 env_path = os.path.join(BASE_DIR, ".env")
 if os.path.exists(env_path):
     try:
@@ -27,7 +26,7 @@ if os.path.exists(env_path):
 if os.environ.get("GEMINI_API_KEY"):
     genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# load models
+
 try:
     with open(os.path.join(BASE_DIR, "knn_imputer.pkl"), "rb") as f:
         knn_imputer = pickle.load(f)
@@ -93,10 +92,8 @@ def get_priorities(student_data):
 def generate_ai_advice(grade, raw_data):
     risk = "At-Risk" if grade < 55 else ("Average" if grade < 80 else "Excellent")
     
-    # 1. Get the bad habits
     issues = get_priorities(raw_data)
     
-    # 2. Find the good habits (anything NOT in the issues list!)
     issue_cols = [item['col'] for item in issues]
     strengths = []
     
@@ -107,7 +104,6 @@ def generate_ai_advice(grade, raw_data):
     if "StudyHoursPerDay" not in issue_cols and pd.notna(raw_data.get("StudyHoursPerDay")):
         strengths.append(f"- Strong Academic Focus ({raw_data['StudyHoursPerDay']} hrs)")
     
-    # 3. Format the lists for the LLM
     target_issues = []
     for item in issues[:3]:  
         if item['type'] == 'low':
@@ -143,7 +139,6 @@ def generate_ai_advice(grade, raw_data):
             print(f"Model {m} failed: {e}")
             continue 
             
-    # Graceful fallback text to satisfy Requirement R5 if all API calls fail
     return "The AI Advisor is currently experiencing high traffic. Please try again in a few moments."
 
 @app.route("/")
