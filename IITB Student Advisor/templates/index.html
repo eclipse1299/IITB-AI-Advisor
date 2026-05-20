@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Advisor | IITB</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <div class="brand">
+                <h1>IIT Bombay AI Performance Advisor</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="intro">
+            <h2>Academic Performance Predictor</h2>
+            <p>Input your daily routine metrics to generate a predicted Cumulative Grade and recieve personalised lifestly advice.</p>
+        </div>
+
+        <div class="layout-grid">
+            <div class="form-container card">
+                <div class="card-header">
+                    <h3>Student Metrics</h3>
+                </div>
+                
+                <div id="errorBanner" class="error-alert hidden"></div>
+                
+                <form id="metricsForm">
+                    <fieldset>
+                        <legend>Demographics & Academics</legend>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Gender</label>
+                                <select id="Gender" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Age</label>
+                                <input type="number" id="Age" min="15" max="30" required>
+                                <span class="err-msg" id="err-Age"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Parental Education (Optional)</label>
+                                <select id="parental_education_level">
+                                    <option value="" selected>Skip</option>
+                                    <option value="High School">High School</option>
+                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Master">Master</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Attendance (%)</label>
+                                <input type="number" id="AttendancePercentage" min="0" max="100" required>
+                                <span class="err-msg" id="err-AttendancePercentage"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Productivity (1-10)</label>
+                                <input type="number" id="ProductivityScore" min="1" max="10" required>
+                                <span class="err-msg" id="err-ProductivityScore"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Position of Responsibility</label>
+                                <select id="PoR" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Extracurriculars</label>
+                                <select id="extracurricular_participation" required>
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Time & Lifestyle (Hrs/Day)</legend>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Study Hours</label>
+                                <input type="number" id="StudyHoursPerDay" min="0" max="24" required>
+                                <span class="err-msg" id="err-StudyHoursPerDay"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Sleep Hours</label>
+                                <input type="number" id="SleepHoursPerNight" min="0" max="24" required>
+                                <span class="err-msg" id="err-SleepHoursPerNight"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Social Media</label>
+                                <input type="number" id="SocialMediaHours" min="0" max="24" required>
+                                <span class="err-msg" id="err-SocialMediaHours"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Passive Ent.</label>
+                                <input type="number" id="PassiveEntertainmentHrs" min="0" max="24" required>
+                                <span class="err-msg" id="err-PassiveEntertainmentHrs"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Total Screen Time</label>
+                                <input type="number" id="TotalScreenTime" min="0" max="24" required>
+                                <span class="err-msg" id="err-TotalScreenTime"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Exercise (Days/Wk)</label>
+                                <input type="number" id="Exercise_frequency" min="0" max="7" required>
+                                <span class="err-msg" id="err-Exercise_frequency"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Mental Health (1-10)</label>
+                                <input type="number" id="mental_health_rating" min="1" max="10" required>
+                                <span class="err-msg" id="err-mental_health_rating"></span>
+                            </div>
+                            <div class="input-group">
+                                <label>Diet Quality (Optional)</label>
+                                <select id="Diet_Quality">
+                                    <option value="" selected>Skip</option>
+                                    <option value="Poor">Poor</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Good">Good</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Internet (Optional)</label>
+                                <select id="internet_quality">
+                                    <option value="" selected>Skip</option>
+                                    <option value="Poor">Poor</option>
+                                    <option value="Average">Average</option>
+                                    <option value="Good">Good</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" id="calcBtn" class="btn">Predict Grade</button>
+                </form>
+            </div>
+
+            <div class="results-container">
+                <div class="card result-card" id="outputCard" style="display: none;">
+                    <div class="score-header">
+                        <h3>Prediction</h3>
+                        <span id="riskBadge" class="badge"></span>
+                    </div>
+                    
+                    <div class="gauge-container">
+                        <svg class="gauge" viewBox="0 0 100 100">
+                            <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="gauge-fill" id="gradeBar" cx="50" cy="50" r="45"></circle>
+                        </svg>
+                        <div class="score-text">
+                            <span id="finalScore">0.0</span>
+                            <small>/ 100</small>
+                        </div>
+                    </div>
+                    
+                    <div class="advice-box">
+                        <p id="aiAdvice"></p>
+                    </div>
+                </div>
+                
+                <div class="card placeholder-card" id="waitingCard">
+                    <p>Submit form to view prediction.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
